@@ -66,6 +66,168 @@ Creamos los tres sprites y les asignamos un script de movimiento. En nuestro cas
 ![image](https://github.com/user-attachments/assets/35827728-ec16-44a9-8d09-c3da6d08b3a5)
 
 Con los tres objetos que conformarán el grupo en la escena, hacemos click derecho en la pestaña _"Hierarchy"_ y seleccionamos la opción `Cinemachine > Target Group Camera`, que creará una nueva cámara virtual y un objeto de tipo `CinemachineTargetGroup`. 
-Por último, 
+Por último, asignamos esos tres objetos a la lista de seguimiento del último componente mencionado.
+
+![image](https://github.com/user-attachments/assets/1c2c5078-8cde-4433-bf33-1673d600aaec)
+
+![3  Apartado a](https://github.com/user-attachments/assets/6c9f5c8c-c7fd-4e33-827b-7bdbc276903e)
+
+
+### _b. Agrega 2 sprites adicionales en la escena que estén realizando un movimiento Genera una cámara adicional que le haga el seguimiento a dichos objetos, cada uno con un peso en la importancia del seguimiento diferente._
+
+![image](https://github.com/user-attachments/assets/57dcaffa-82a9-49e7-bbc1-7fb6e87ee43f)
+
+![3  Apartado b](https://github.com/user-attachments/assets/762fac88-5ccd-4f68-8db9-4a295e5d7c3d)
+
+## 4. Impulso
+
+### _a. Cinemachine Impulse Source: el impulso se genera en respuesta a un evento_
+
+Añadimos el componente `CinemachineImpulseListener` en la cámara virtual y luego `CinemachineImpulseSource` en cualquier otro GameObject. El primer componente estará a la escucha de que se dispare un impulso desde `CinemachineImpulseSource`.
+
+Finalmente, creamos un script que genere ese impulso cuando al transcurrir un segundo tras la ejecución del método `Start()`:
+
+```cs
+using Cinemachine;
+using UnityEngine;
+
+public class CinemachineCameraShaker : MonoBehaviour
+{
+    private CinemachineImpulseSource _impulseSource;
+
+    private void Start()
+    {
+        _impulseSource = GetComponent<CinemachineImpulseSource>();
+        Invoke(nameof(ShakeCam), 1);
+    }
+
+    private void ShakeCam()
+    {
+        _impulseSource.GenerateImpulse();
+    }
+}
+```
+
+![4  Ejercicio 4a](https://github.com/user-attachments/assets/67bcfeeb-089c-439e-821d-aa0bf9cbe68b)
+
+
+### _b. Cinemachine Collision Impulse Source: el impulso se genera por una colisión._
+
+Añadimos el componente `CinemachineCollisionImpulseSource` a un objeto que tenga a su vez un componente de tipo `Collider2D`.
+
+![image](https://github.com/user-attachments/assets/a6014b0a-dda3-4f76-8983-a03a65fda90e)
+
+![4  Ejercicio 4b](https://github.com/user-attachments/assets/8b9dc82f-4766-4301-9f97-39adbff5fd20)
+
+
+## 5. Implementar un zoom a la cámara del jugador que se controle con las teclas W y S.
+
+Se añade el siguiente script:
+
+```cs
+using Cinemachine;
+using UnityEngine;
+
+public class CinemachineZoom : MonoBehaviour
+{
+    [SerializeField] private CinemachineVirtualCamera _vcam;
+    [SerializeField] private float _zoom;
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.S))
+            _vcam.m_Lens.OrthographicSize += _zoom;
+        else if (Input.GetKey(KeyCode.W))
+        {
+            if (_vcam.m_Lens.OrthographicSize - _zoom > 0.0)
+                _vcam.m_Lens.OrthographicSize -= _zoom;
+        }
+    }
+}
+```
+
+![5  Ejercicio 5](https://github.com/user-attachments/assets/ed48d1ba-6045-4202-9ef7-c6b2c21dcc15)
+
+## 6. Seleccionar un conjunto de teclas que permitan hacer el cambio entre dos cámaras . (Habilitar/Deshabilitar el gameobject de la cámara virtual)
+
+Las teclas empleadas para desactivar y activar las cámaras son: `1` y `2`. La tecla `1` activa la primera cámara virtual, mientras que la tecla `2` activa la segunda.
+
+```cs
+using Cinemachine;
+using UnityEngine;
+
+public class CinemachineSwitchVCams : MonoBehaviour
+{
+    [SerializeField] private CinemachineBrain _cinemachineBrain;
+    
+    [SerializeField] private CinemachineVirtualCamera _vcam1;
+    [SerializeField] private CinemachineVirtualCamera _vcam2;
+    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) && !_vcam1.gameObject.activeSelf)
+        {
+            _cinemachineBrain.ActiveVirtualCamera.VirtualCameraGameObject.SetActive(false);
+            _vcam1.gameObject.SetActive(true);
+        } else if (Input.GetKeyDown(KeyCode.Alpha2) && !_vcam2.gameObject.activeSelf)
+        {
+            _cinemachineBrain.ActiveVirtualCamera.VirtualCameraGameObject.SetActive(false);
+            _vcam2.gameObject.SetActive(true);            
+        }
+    }
+}
+```
+![6  Ejercicio 6](https://github.com/user-attachments/assets/a4e8e593-2c6b-4110-b6a6-e7ba498bf166)
+
+## 7. Cámara rápida y lenta
+
+### _a. Crear un script para activar la cámara lenta cuando el personaje entre en colisión con un elemento de la escena que elijas para activar esta propiedad._
+### _b. Crear un script para activar la cámara rápida cuando el personaje entre en colisión con un elemento de la escena que elijas para activar esta propiedad._
+
+```cs
+using UnityEngine;
+
+public class CinemachineBulletTime : MonoBehaviour
+{
+    [SerializeField] private GameObject _player;
+    [SerializeField] private bool _bulletTime;
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.gameObject.Equals(_player)) 
+            return;
+
+        Time.timeScale = _bulletTime ? .5f : 2.0f;
+    }
+}
+```
+
+![7  Ejercicio 7](https://github.com/user-attachments/assets/3c75d004-01ab-4dca-84e2-3268d523b08e)
+
+## 8. Crear un script para intercambiar la cámara activa, una estará confinada y la otra no, cuando el personaje entre en colisión con un elemento de la escena que elijas para activar esta propiedad.
+
+```cs
+using Cinemachine;
+using UnityEngine;
+
+public class CinemachineTransition : MonoBehaviour
+{
+    [SerializeField] private CinemachineBrain _cinemachineBrain;
+    [SerializeField] private CinemachineVirtualCamera _vcam;
+    
+    [SerializeField] private GameObject _player;
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.gameObject.Equals(_player))
+            return;
+
+        _cinemachineBrain.ActiveVirtualCamera.Priority = 9;
+        _vcam.Priority = 10;
+    }
+}
+```
+
+![8  Ejercicio 8](https://github.com/user-attachments/assets/0e6c86e3-2b03-41f8-8660-c43bec1151d4)
 
 
