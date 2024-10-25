@@ -14,32 +14,58 @@ Ahora que tenemos el paquete necesario para la práctica, pulsamos el click dere
 
 ![image](https://github.com/user-attachments/assets/9a694b58-58ca-4a8e-8de1-5da25c9601a7)
 
+
 Los cambios que realizaremos a nuestra primera cámara virtual serán:
-* Le asignamos el objetivo que deberá seguir en la propiedad `Follow`
-* Modificamos la propiedad `Tracked Object Offset` para que el objeto a seguir esté siempre situado en el cuadrante inferior izquierdo de la cámara.
+* Le asignamos el objetivo que deberá seguir en la propiedad `Follow`.
 * Reducimos la propiedad `Lens Ortho Size` para cambiar el tamaño de la lente.
+* Modificamos la propiedad `Tracked Object Offset` para que el objeto a seguir esté siempre situado en el cuadrante inferior izquierdo de la cámara.
 
-![image](https://github.com/user-attachments/assets/f9f4f26c-150e-495a-b51a-9a69e7629e67)
+Los realizados a la segunda cámara virtual son:
+* Le asignamos el objetivo que deberá seguir en la propiedad `Follow`.
+* Reducimos la propiedad `Lens Ortho Size` para cambiar el tamaño de la lente, aunque no tanto como la primera cámara virtual.
+* Aumentamos las propiedades `LookaheadTime` y `LookaheadSmoothing` para que la cámara se adelanta al movimiento del personaje.
 
-A continuación, creamos la segunda cámara virtual con los valores por defecto, por lo que estará centrada respecto al personaje.
+![image](https://github.com/user-attachments/assets/316425f4-c2d1-4305-9abe-b12549b77690)
 
 **CÁMARA VIRTUAL 1**
 
-![1  Cámara A](https://github.com/user-attachments/assets/17d537fc-2c88-4747-8f9e-638212884c65)
+![1  Cámara A](https://github.com/user-attachments/assets/71745de7-38e2-4772-896d-fa9983fadf8a)
 
 **CÁMARA VIRTUAL 2**
 
-![1  Cámara B](https://github.com/user-attachments/assets/944a6241-eb00-42a5-9519-89570b3e4a94)
+![1  Cámara B](https://github.com/user-attachments/assets/08086cf4-492b-4e89-b0cf-286d0fa2bb9b)
 
 ## 2. Define un área de confinamiento diferente para cada una de las dos cámaras de la tarea anterior. Realiza una prueba de ejecución con el correspondiente gif animado que permita ver las diferencias.
 
-Creamos un objeto vacío en la escena y le añadimos el componente `PollygonCollider2D` para que actúe como área de confinamiento. Luego, le añadimos a la cámara virtual 1 la extensión `CinemachineConfiner2D` y inicializamos la propiedad `BoundingShape2D` al área de confinamiento recién creada.
-
-![image](https://github.com/user-attachments/assets/3a140840-4ce9-4d42-a6b2-706759138a48)
+Añadimos a ambas cámaras virtuales la extensión `CinemachineConfiner2D`.
 
 ![image](https://github.com/user-attachments/assets/06de803e-5ed4-4301-aa50-9737c3afe540)
 
-![2  Cámara A](https://github.com/user-attachments/assets/7791973d-1259-42e7-b059-d951c98e6f2f)
+Creamos dos objeto vacíos en la escena y les añadimos el componente `PollygonCollider2D` para que actúe como área de confinamiento. Luego, inicializamos el valor `CinemachineConfiner2D.BoundingShape2D` con el área de confinamiento que deseemos usar para la cámara.
 
+**CÁMARA VIRTUAL 1**
+
+![image](https://github.com/user-attachments/assets/b76302a9-1de8-4103-ba1c-56aaada735a3)
+
+
+![2  Cámara 1](https://github.com/user-attachments/assets/0d466945-6044-4983-bcbb-099adebd8fa7)
+
+
+**CÁMARA VIRTUAL 2**
+
+![image](https://github.com/user-attachments/assets/1028a901-dfdc-4195-947d-b5fc83f8c4a5)
+
+![2  Cámara 2](https://github.com/user-attachments/assets/5a3c9035-ce59-422a-91be-bdc9c269e4b5)
+
+## 3. Seguimiento a un grupo de objetivos:
+
+### _a. Agrega varios sprites en la escena que estén realizando un movimiento (mínimo 3). Genera una cámara adicional que le haga el seguimiento a dichos objetos._
+
+Creamos los tres sprites y les asignamos un script de movimiento. En nuestro caso, el rectángulo rosa se moverá a la izquierda en diagonal, mientras que el naranja lo hará en diagonal a la derecha. El rectángulo rojo no se moverá.
+
+![image](https://github.com/user-attachments/assets/35827728-ec16-44a9-8d09-c3da6d08b3a5)
+
+Con los tres objetos que conformarán el grupo en la escena, hacemos click derecho en la pestaña _"Hierarchy"_ y seleccionamos la opción `Cinemachine > Target Group Camera`, que creará una nueva cámara virtual y un objeto de tipo `CinemachineTargetGroup`. 
+Por último, 
 
 
